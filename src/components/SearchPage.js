@@ -23,10 +23,11 @@ class SearchPage extends Component {
       if (results && !results.hasOwnProperty('error')) {
         const newBooks = Object.keys(results).map((book) => {
           console.log('called API and return with ', results.length, ' books');
-          const { title, authors, imageLinks } = results[book];
-          return { title, authors, imageLinks };
+          const { id, title, authors, imageLinks } = results[book];
+          return { id, title, authors, imageLinks };
         });
 
+        // console.log(newBooks, 'query search book');
         this.setState({ books: newBooks });
       } else {
         console.log('error in fetching books no found');
@@ -72,7 +73,11 @@ class SearchPage extends Component {
           </div>
         </div>
         <div className="search-books-results">
-          <Book books={this.state.books} />
+          <ol className="books-grid">
+            {this.state.books.map((book) => (
+              <Book key={book.id} book={book} />
+            ))}
+          </ol>
         </div>
       </div>
     );

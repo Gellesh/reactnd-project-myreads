@@ -1,40 +1,90 @@
-const books = [
-  {
-    title: 'Drama',
-    authors: ['Raina Telgemeier'],
-    publisher: 'Scholastic Inc.',
-    publishedDate: '2014-07-29',
-    description:
-      "From Raina Telgemeier, the #1 New York Times bestselling, multiple Eisner Award-winning author of Smile and Sisters! Callie loves theater. And while she would totally try out for her middle school's production of Moon over Mississippi, she can't really sing. Instead she's the set designer for the drama department's stage crew, and this year she's determined to create a set worthy of Broadway on a middle-school budget. But how can she, when she doesn't know much about carpentry, ticket sales are ...",
+const books = {
+  currentlyReading: [
+    {
+      id: '74XNzF_al3MC',
+      title: 'Lords of Finance',
+      authors: '["Liaquat Ahamed"]',
+      imageLinks: '{smallThumbnail: "http://books.google.com/books/con…}',
+      shelf: 'currentlyReading',
+    },
+    {
+      id: 'jAUODAAAQBAJ',
+      title: 'Needful Things',
+      authors: '["Stephen King"]',
+      imageLinks: '{smallThumbnail: "http://books.google.com/books/con…}',
+      shelf: 'currentlyReading',
+    },
+  ],
+  read: [
+    {
+      id: 'IOejDAAAQBAJ',
+      title: 'React',
+      authors: '["Nils Hartmann", "Oliver Zeigermann"]',
+      imageLinks: '{smallThumbnail: "http://books.google.com/books/con…}',
+      shelf: 'read',
+    },
+    {
+      id: '1wy49i-gQjIC',
+      title: 'Satire TV',
+      authors: '["Jonathan Gray", "Jeffrey P. Jones", "Ethan Thomps…]',
+      imageLinks: '{smallThumbnail: "http://books.google.com/books/con…}',
+      shelf: 'read',
+    },
+    {
+      id: '2RIcAwAAQBAJ',
+      title: 'Station Eleven',
+      authors: '["Emily St. John Mandel"]',
+      imageLinks: '{smallThumbnail: "http://books.google.com/books/con…}',
+      shelf: 'read',
+    },
+  ],
+  wantToRead: [
+    {
+      id: 'sJf1vQAACAAJ',
+      title: 'Learning Web Development with React and Bootstrap',
+      authors: '["Harmeet Singh", "Mehul Bhatt"]',
+      imageLinks: '{smallThumbnail: "http://books.google.com/books/con…}',
+      shelf: 'wantToRead',
+    },
+    {
+      id: 'evuwdDLfAyYC',
+      title: "The Cuckoo's Calling",
+      authors: '["Robert Galbraith"]',
+      imageLinks: '{smallThumbnail: "http://books.google.com/books/con…}',
+      shelf: 'wantToRead',
+    },
+    {
+      id: 'nggnmAEACAAJ',
+      title: 'The Linux Command Line',
+      authors: '["William E. Shotts, Jr."]',
+      imageLinks: '{smallThumbnail: "http://books.google.com/books/con…}',
+      shelf: 'wantToRead',
+    },
+  ],
+};
 
+const obj = {
+  shelfBef: 'wantToRead',
+  shelfAft: 'currentlyReading',
+  book: {
+    id: 'nggnmAEACAAJ',
+    title: 'The Linux Command Line',
+    authors: ['William E. Shotts, Jr.'],
     imageLinks: {
       smallThumbnail:
-        'http://books.google.com/books/content?id=1w4fAwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api',
+        'http://books.google.com/books/content?id=nggnmAEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api',
       thumbnail:
-        'http://books.google.com/books/content?id=1w4fAwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
+        'http://books.google.com/books/content?id=nggnmAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api',
     },
+    shelf: 'wantToRead',
   },
+};
 
-  {
-    title: 'Comdey',
-    authors: ['Raina gellesj'],
-    publisher: 'Scholastic Inc.',
-    publishedDate: '2014-07-29',
-    description:
-      "From Raina Telgemeier, the #1 New York Times bestselling, multiple Eisner Award-winning author of Smile and Sisters! Callie loves theater. And while she would totally try out for her middle school's production of Moon over Mississippi, she can't really sing. Instead she's the set designer for the drama department's stage crew, and this year she's determined to create a set worthy of Broadway on a middle-school budget. But how can she, when she doesn't know much about carpentry, ticket sales are ...",
-
-    imageLinks: {
-      smallThumbnail:
-        'http://books.google.com/books/content?id=1w4fAwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api',
-      thumbnail:
-        'http://books.google.com/books/content?id=1w4fAwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-    },
-  },
-];
-
-const newBooks = books.map((book) => {
-  const { title, authors, imageLinks } = book;
-  return { title, authors, imageLinks };
+const temp = books[obj.shelfBef].filter((book) => {
+  return obj.book.id !== book.id;
 });
 
-console.log(newBooks);
+books[obj.shelfBef] = temp;
+books[obj.shelfAft].push(obj.book);
+
+console.log(books);
