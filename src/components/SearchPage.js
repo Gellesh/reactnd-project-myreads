@@ -1,14 +1,50 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Book from './Book';
+import { debounce } from 'lodash';
+import * as BooksAPI from '../utils/BooksAPI';
 
 class SearchPage extends Component {
   state = {
     query: '',
+    books: [],
   };
 
-  updateQuery = (new_query) => {
-    this.setState({ query: new_query });
+  componentWillMount() {
+    this.getBooks = debounce(this.getBooks, 100);
+  }
+
+  // getBooks = debounce(this.updateQuery, 100);
+
+  getBooks = () => {
+    // fetch books for this API and update books
+    console.log('query = ', this.state.query);
+    BooksAPI.search(this.state.query).then((results) => {
+      if (results && !results.hasOwnProperty('error')) {
+        const newBooks = Object.keys(results).map((book) => {
+          console.log('called API and return with ', results.length, ' books');
+          const { title, authors, imageLinks } = results[book];
+          return { title, authors, imageLinks };
+        });
+
+        this.setState({ books: newBooks });
+      } else {
+        console.log('error in fetching books no found');
+        this.setState({ books: [] });
+      }
+    });
   };
+  updateQuery = (query) => {
+    // change input field
+    this.setState({ query: query });
+    // get books in case there is a query
+    if (this.state.query !== '') {
+      this.getBooks();
+    }
+
+    this.setState({ books: [] });
+  };
+
   render() {
     return (
       <div className="search-books">
@@ -31,16 +67,13 @@ class SearchPage extends Component {
               type="text"
               placeholder="Search by title or author"
               value={this.state.query}
-              onChange={(e) => this.updateQuery(e.target.value)}
-              //   onChange={(event) => this.updateQuery(event.target.value)}
+              onChange={(event) => this.updateQuery(event.target.value)}
             />
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid" />
+          <Book books={this.state.books} />
         </div>
-
-        <h3>{this.state.query}</h3>
       </div>
     );
   }
