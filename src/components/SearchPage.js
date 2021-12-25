@@ -10,40 +10,48 @@ class SearchPage extends Component {
     books: [],
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.getBooks = debounce(this.getBooks, 100);
   }
+  handleUpdate = (book) => {
+    // console.log(book);
+  };
 
   // getBooks = debounce(this.updateQuery, 100);
 
   getBooks = () => {
     // fetch books for this API and update books
-    console.log('query = ', this.state.query);
-    BooksAPI.search(this.state.query).then((results) => {
-      if (results && !results.hasOwnProperty('error')) {
-        const newBooks = Object.keys(results).map((book) => {
-          console.log('called API and return with ', results.length, ' books');
-          const { id, title, authors, imageLinks } = results[book];
-          return { id, title, authors, imageLinks };
-        });
+    const query = this.state.query;
+    if (query !== '') {
+      BooksAPI.search(query).then((results) => {
+        if (results && !results.hasOwnProperty('error')) {
+          const newBooks = Object.keys(results).map((book) => {
+            const { id, title, authors, imageLinks } = results[book];
+            return { id, title, authors, imageLinks };
+          });
 
-        // console.log(newBooks, 'query search book');
-        this.setState({ books: newBooks });
-      } else {
-        console.log('error in fetching books no found');
-        this.setState({ books: [] });
-      }
-    });
+          // console.log(newBooks, 'query search book');
+          this.setState({ books: newBooks });
+        } else {
+          // console.log('error in fetching books no found');
+
+          this.setState({ books: [] });
+        }
+      });
+    } else {
+      this.setState({ books: [] });
+    }
   };
   updateQuery = (query) => {
     // change input field
     this.setState({ query: query });
     // get books in case there is a query
-    if (this.state.query !== '') {
-      this.getBooks();
-    }
-
-    this.setState({ books: [] });
+    this.getBooks();
+    // if (this.state.query !== '') {
+    //   this.getBooks();
+    // } else {
+    //   this.setState({ books: [] });
+    // }
   };
 
   render() {
@@ -73,11 +81,28 @@ class SearchPage extends Component {
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid">
-            {this.state.books.map((book) => (
-              <Book key={book.id} book={book} />
-            ))}
-          </ol>
+          {this.state.books.length > 0 && (
+            <ol className="books-grid">
+              {this.state.books.map((book) => (
+                <Book
+                  key={book.id}
+                  book={book}
+                  updateBook={this.handleUpdate}
+                  // didMount={this.toogleMount}
+                />
+              ))}
+            </ol>
+          )}
+
+          {this.state.books.length === 0 && (
+            <div>
+              <h1>
+                {this.state.query.length === 0
+                  ? 'Search to explore some books'
+                  : 'No books are found please modify search keywords'}
+              </h1>
+            </div>
+          )}
         </div>
       </div>
     );

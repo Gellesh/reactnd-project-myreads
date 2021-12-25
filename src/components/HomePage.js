@@ -25,7 +25,6 @@ class HomePage extends Component {
   }
 
   handleUpdate = (obj) => {
-    console.log(obj);
     let newBooks = this.state.books;
     const temp = newBooks[obj.shelfBef].filter((book) => {
       return obj.book.id !== book.id;
@@ -34,7 +33,7 @@ class HomePage extends Component {
     const book = obj.book;
     book.shelf = obj.shelfAft;
     newBooks[obj.shelfBef] = temp;
-    newBooks[obj.shelfAft].push(obj.book);
+    if (obj.shelfAft !== 'none') newBooks[obj.shelfAft].push(obj.book);
     this.setState({ books: newBooks });
   };
   render() {
@@ -63,7 +62,7 @@ class HomePage extends Component {
 
         <div className="open-search">
           <Link className="open-search" to="/search">
-            Add a book
+            <button>Add a book</button>
           </Link>
         </div>
       </div>

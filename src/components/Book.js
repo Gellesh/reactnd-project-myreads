@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import * as BooksAPI from '../utils/BooksAPI';
 
+const defaultImage =
+  'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg';
+
 export default class Book extends Component {
   state = {
     value: '',
   };
+
+  is_mounted = false;
 
   handleChange = (e) => {
     let book = this.props.book;
@@ -15,7 +20,6 @@ export default class Book extends Component {
       shelfAft: e.target.value,
       book: book,
     };
-    console.log(obj);
     this.setState({ value: e.target.value });
     this.props.updateBook(obj);
   };
@@ -45,13 +49,18 @@ export default class Book extends Component {
   ];
 
   componentDidMount() {
+    this.is_mounted = true;
     if (!this.props.book.shelf) {
-      console.log('call api to get status');
       BooksAPI.get(this.props.book.id).then((book) => {
+        if (!this.is_mounted) return;
         this.setState({ value: book.shelf });
       });
     }
     this.setState({ value: this.props.book.shelf });
+  }
+
+  componentWillUnmount() {
+    this.is_mounted = false;
   }
   render() {
     const book = this.props.book;
@@ -66,7 +75,7 @@ export default class Book extends Component {
                 height: 193,
                 backgroundImage: book.imageLinks
                   ? `url("${book.imageLinks.thumbnail}")`
-                  : 'url("http://books.google.com/books/content?id=yDtCuFHXbAYC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72RRiTR6U5OUg3IY_LpHTL2NztVWAuZYNFE8dUuC0VlYabeyegLzpAnDPeWxE6RHi0C2ehrR9Gv20LH2dtjpbcUcs8YnH5VCCAH0Y2ICaKOTvrZTCObQbsfp4UbDqQyGISCZfGN&source=gbs_api")',
+                  : `url("${defaultImage}")`,
               }}
             />
             <div className="book-shelf-changer">
