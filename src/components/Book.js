@@ -94,7 +94,7 @@ export default class Book extends Component {
           </div>
           <div className="book-title">{book.title}</div>
           <div className="book-authors">
-            {book.authors ? book.authors : 'No author'}
+            {book.authors ? book.authors.join(' and ') : 'No author'}
           </div>
         </div>
       </li>
